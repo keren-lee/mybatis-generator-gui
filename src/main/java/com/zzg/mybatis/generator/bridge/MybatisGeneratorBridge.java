@@ -5,7 +5,9 @@ import com.zzg.mybatis.generator.controller.PictureProcessStateController;
 import com.zzg.mybatis.generator.model.DatabaseConfig;
 import com.zzg.mybatis.generator.model.DbType;
 import com.zzg.mybatis.generator.model.GeneratorConfig;
+import com.zzg.mybatis.generator.model.GeneratorNameConfig;
 import com.zzg.mybatis.generator.plugins.DbRemarksCommentGenerator;
+import com.zzg.mybatis.generator.plugins.OracleBatchInsertPlugin;
 import com.zzg.mybatis.generator.util.ConfigHelper;
 import com.zzg.mybatis.generator.util.DbUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -33,7 +35,7 @@ public class MybatisGeneratorBridge {
 
 	private static final Logger _LOG = LoggerFactory.getLogger(MybatisGeneratorBridge.class);
 
-    private GeneratorConfig generatorConfig;
+//    private GeneratorConfig generatorConfig;
 
     private DatabaseConfig selectedDatabaseConfig;
 
@@ -46,15 +48,15 @@ public class MybatisGeneratorBridge {
     public MybatisGeneratorBridge() {
     }
 
-    public void setGeneratorConfig(GeneratorConfig generatorConfig) {
-        this.generatorConfig = generatorConfig;
-    }
+//    public void setGeneratorConfig(GeneratorConfig generatorConfig) {
+//        this.generatorConfig = generatorConfig;
+//    }
 
     public void setDatabaseConfig(DatabaseConfig databaseConfig) {
         this.selectedDatabaseConfig = databaseConfig;
     }
 
-    public void generate() throws Exception {
+    public void generate(GeneratorConfig generatorConfig, GeneratorNameConfig generatorNameConfig) throws Exception {
         Configuration configuration = new Configuration();
         Context context = new Context(ModelType.CONDITIONAL);
         configuration.addContext(context);
@@ -67,8 +69,10 @@ public class MybatisGeneratorBridge {
 	    configuration.addClasspathEntry(connectorLibPath);
         // Table configuration
         TableConfiguration tableConfig = new TableConfiguration(context);
-        tableConfig.setTableName(generatorConfig.getTableName());
-        tableConfig.setDomainObjectName(generatorConfig.getDomainObjectName());
+        tableConfig.setTableName(generatorNameConfig.getTableName());
+        tableConfig.setDomainObjectName(generatorNameConfig.getEntityName());
+//        tableConfig.setSelectByPrimaryKeyStatementEnabled(true);
+//        tableConfig.setUpdateByPrimaryKeyStatementEnabled(true);
         if(!generatorConfig.isUseExample()) {
             tableConfig.setUpdateByExampleStatementEnabled(false);
             tableConfig.setCountByExampleStatementEnabled(false);
@@ -116,8 +120,8 @@ public class MybatisGeneratorBridge {
 			tableConfig.setGeneratedKey(new GeneratedKey(generatorConfig.getGenerateKeys(), dbType2, true, null));
 		}
 
-        if (generatorConfig.getMapperName() != null) {
-            tableConfig.setMapperName(generatorConfig.getMapperName());
+        if (generatorNameConfig.getMapperName() != null) {
+            tableConfig.setMapperName(generatorNameConfig.getMapperName());
         }
         // add ignore columns
         if (ignoredColumns != null) {
@@ -135,7 +139,7 @@ public class MybatisGeneratorBridge {
         }
 
 		if(generatorConfig.isUseTableNameAlias()){
-            tableConfig.setAlias(generatorConfig.getTableName());
+            tableConfig.setAlias(generatorNameConfig.getTableName());
         }
 
         JDBCConnectionConfiguration jdbcConfig = new JDBCConnectionConfiguration();
@@ -254,6 +258,20 @@ public class MybatisGeneratorBridge {
                 pluginConfiguration.setConfigurationType("com.zzg.mybatis.generator.plugins.CommonDAOInterfacePlugin");
                 context.addPluginConfiguration(pluginConfiguration);
             }
+        }
+
+        if(generatorConfig.isBatchInsert()) {
+            PluginConfiguration pluginConfiguration = new PluginConfiguration();
+            if (DbType.MySQL.name().equals(dbType) || DbType.MySQL_8.name().equals(dbType)
+                    || DbType.PostgreSQL.name().equals(dbType)) {
+                // 批量语句插件
+                pluginConfiguration.addProperty("type", "com.zzg.mybatis.generator.plugins.CustomBatchPlugin");
+                pluginConfiguration.setConfigurationType("com.zzg.mybatis.generator.plugins.CustomBatchPlugin");
+            }else if(DbType.Oracle.name().equals(dbType)) {
+                pluginConfiguration.addProperty("type", "com.zzg.mybatis.generator.plugins.OracleBatchInsertPlugin");
+                pluginConfiguration.setConfigurationType("com.zzg.mybatis.generator.plugins.OracleBatchInsertPlugin");
+            }
+            context.addPluginConfiguration(pluginConfiguration);
         }
 
         context.setTargetRuntime("MyBatis3");

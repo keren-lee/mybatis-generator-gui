@@ -1,9 +1,17 @@
 mybatis-generator-gui
 ==============
 
+感谢原作者的开源，fork了原作者代码，站在巨人的肩膀上，在原基础上做了一些修改
+* 代码生成修改为批量生成entity、mapper、mapper xml，在实际运用过程中，表很多的情况下，一张一张表去操作比较满烦。
+* 增加去除表名前缀功能。
+* 增加去除表名后缀功能。
+* 增加可以添加entity后缀功能，实际工作中遇到比如entity后缀要加PO等。  
+* Mapper接口生成修改为界面输入后缀，如Mapper、DAO，后台生成对应的后缀Mapper接口。
+* 增加批量插入语句生成功能：支持mysql和oracle。
+
 mybatis-generator-gui是基于 [mybatis generator](http://www.mybatis.org/generator/index.html) 开发一款界面工具, 本工具可以使你非常容易及快速生成Mybatis的Java POJO文件及数据库Mapping文件。
 
-![image](https://user-images.githubusercontent.com/3505708/49334784-1a42c980-f619-11e8-914d-9ea85db9cec3.png)
+![image](./image/img-1.png)
 
 
 ![basic](https://user-images.githubusercontent.com/3505708/51911610-45754980-240d-11e9-85ad-643e55cafab2.png)

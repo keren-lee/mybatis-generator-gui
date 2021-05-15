@@ -39,4 +39,18 @@ public class MyStringUtils {
         return null;
     }
 
+    public static String removePrefix(String prefix,String target) {
+        if(!target.startsWith(prefix)) {
+            return target;
+        }
+        return target.substring(prefix.length());
+    }
+
+    public static String removeSuffix(String suffix,String target) {
+        if(!target.endsWith(suffix)) {
+            return target;
+        }
+        return target.substring(0,target.length()-suffix.length());
+    }
+
 }

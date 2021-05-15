@@ -76,6 +76,7 @@
     </dependencies>
 
     <build>
+        <finalName>mybatis-generator</finalName>
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>

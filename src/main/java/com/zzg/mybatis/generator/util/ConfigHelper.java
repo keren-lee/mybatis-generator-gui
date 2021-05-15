@@ -135,6 +135,7 @@ public class ConfigHelper {
 		Statement stat = null;
 		ResultSet rs = null;
 		try {
+			generatorConfig.setTableName("");
 			conn = ConnectionManager.getConnection();
 			stat = conn.createStatement();
 			String jsonStr = JSON.toJSONString(generatorConfig);

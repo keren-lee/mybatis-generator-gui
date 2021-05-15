@@ -68,7 +68,53 @@ public class GeneratorConfig {
 
     private boolean jsr310Support;
 
-    public boolean isJsr310Support() {
+    private String excludeTablePrefix;
+    private String excludeTableSuffix;
+    private String entitySuffix;
+    private String mapperSuffix;
+    private boolean batchInsert;
+
+	public boolean isBatchInsert() {
+		return batchInsert;
+	}
+
+	public void setBatchInsert(boolean batchInsert) {
+		this.batchInsert = batchInsert;
+	}
+
+	public String getExcludeTablePrefix() {
+		return excludeTablePrefix;
+	}
+
+	public void setExcludeTablePrefix(String excludeTablePrefix) {
+		this.excludeTablePrefix = excludeTablePrefix;
+	}
+
+	public String getExcludeTableSuffix() {
+		return excludeTableSuffix;
+	}
+
+	public void setExcludeTableSuffix(String excludeTableSuffix) {
+		this.excludeTableSuffix = excludeTableSuffix;
+	}
+
+	public String getEntitySuffix() {
+		return entitySuffix;
+	}
+
+	public void setEntitySuffix(String entitySuffix) {
+		this.entitySuffix = entitySuffix;
+	}
+
+	public String getMapperSuffix() {
+		return mapperSuffix;
+	}
+
+	public void setMapperSuffix(String mapperSuffix) {
+		this.mapperSuffix = mapperSuffix;
+	}
+
+	public boolean isJsr310Support() {
         return jsr310Support;
     }
 
